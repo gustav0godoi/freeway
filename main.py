@@ -14,10 +14,12 @@ tela = pygame.display.set_mode((800,600))
 #Mudando o nome da tela
 pygame.display.set_caption("Super Jogo 3000")
 #Mudando a cor da janela
-tela.fill((255, 100, 00))
+tela.fill((208, 148, 220))
 
 #Carregando Imagem
 perry = pygame.image.load("src/img/perry.png")
+#Aumentando o tamanho da imagem
+perry = pygame.transform.scale(perry, (600, 300))
 
 #Vou criar um loop infinito para manter a janela aberta
 while True:

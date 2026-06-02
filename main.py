@@ -1,87 +1,88 @@
-#importando o pygame 
+#Importando o pygame
 import pygame
 
-#adicionando cores
+from classe_inimigo import Inimigo
+from classe_jogador import Jogador
+
+#Dicionário de cores
 cores = {"VERMELHO" : (255,0,0),
-         "AZUL" : (0,255,255),
+         "VERDE" : (0,255,0),
          "CINZA" : (100,100,100),
-         "COR DO PERRY" : (208, 148, 220)} 
-#inicilizando os módulos básicos do pygame,  maioriairia funcionar sem, mas alguns nessitam inicializar
-pygame.init()
+         "COR DE NEYMAR QUANDO FOGE": (255,255,0) }
+
+pygame.init() #Inicializa os módulos do pygame, a maioria iria funcionar sem, mas alguns necessitam inicializar
 
 clock = pygame.time.Clock()
+
 #Criando a tela
-tela = pygame.display.set_mode((800,600))
-#Mudando o nome da tela
+tela  = pygame.display.set_mode((1200,900))
+
+#Configurando a tela
 pygame.display.set_caption("Perry 3000")
-#Mudando a janela
-rua = pygame.image.load("src/img/rua.jpg")
+tela.fill(cores["VERDE"])
 
-#Carregando Imagem
-perry = pygame.image.load("src/img/perry.png")
-    #Carregando os carros
-carro1 = pygame.image.load("src/img/carro1.png")
-carro2 = pygame.image.load("src/img/carro2.png")
-carro3 = pygame.image.load("src/img/carro3.png")
-carro4 = pygame.image.load("src/img/carro4.png")
+#Carregando imagens
+
+# Carregando imagens
+fundo = pygame.image.load("src/img/rua.jpg")
+
+fundo = pygame.transform.rotate(fundo, 270)
+
+fundo = pygame.transform.scale(fundo, (1200, 900))
+
+inicio = pygame.image.load("src/img/tela_ini.png")
+
+inicio = pygame.transform.scale(inicio, (1200, 900))
 
 
+#Criando um inimigo, ou melhor, instanciando uma classe, melhor ainda, eu estou criando meu objeto
+lista_inimigos = [Inimigo("src/img/carro1.png"),
+                  Inimigo("src/img/carro2.png"),
+                  Inimigo("src/img/carro3.png"),
+                  Inimigo("src/img/carro4.png")]
 
-#Diminuindo o tamanho da imagem
-perry = pygame.transform.scale_by(perry, 0.5)
-carro1 = pygame.transform.scale_by(carro1, 0.7)
-#criando uma variavel que  vai definir a posição das imagens
-pos_x_perry=170
-pos_y_perry= 300
+#Instanciar um jogador, rriar objeto perry
+perry = Jogador()
 
-pos_x_rua = 0
-pos_y_rua = 40
+#status jogo
+status_jogo = "INICIO"
 
-pos_X_c1 = 290
-pos_y_c1 = 100
-#Vou criar um loop infinito para manter a janela aberta
+#Vou criar um loping infinito para manter a janela aberta
 while True:
-    lista_eventos = pygame.event.get() #Pego todos os eventos que acontece na janela
-    for evento in lista_eventos: #percorro os eventos
-        if evento.type == pygame.QUIT: #Verifico se um dos eventos é para SAIR
+     lista_eventos = pygame.event.get() #Pego todos os eventos que acontecem na janela
+     for evento in lista_eventos: #Percorro os eventos 
+        if evento.type == pygame.QUIT: #Verifico se um dos eventos é para sair
             pygame.quit() #Encerro o jogo
-            exit()
 
+    
 
-    #Pegando a lista de teclas pressionadas
-    teclas_pressisonadas = pygame.key.get_pressed()
-            
-    #Verifico se a tecla da direita está pressionada
-    if teclas_pressisonadas[pygame.K_RIGHT]:
-            pos_x_perry += 5
+     #pegando a lista de teclas pressionadas
+     teclas_pressionadas = pygame.key.get_pressed()
 
-    if teclas_pressisonadas[pygame.K_LEFT]:
-         pos_x_perry -= 5
-         
-    if teclas_pressisonadas[pygame.K_UP]:
-         pos_y_perry -= 5
-
-    if teclas_pressisonadas[pygame.K_DOWN]:
-         pos_y_perry += 5
-
-    #Barreira esquerda e parte de cima
-    if pos_x_perry < 0:
-         pos_x_perry +=5
-    if pos_y_perry < 0:
-         pos_y_perry +=5
-
-    #Barreira Direita e parte de baixo
-    if pos_x_perry > 725:
-         pos_x_perry -=5
-    if pos_y_perry > 530:
-         pos_y_perry -=5
+     if status_jogo == "INICIO":
+         tela.blit(inicio,(0,0))
+         if teclas_pressionadas[pygame.K_RETURN] or teclas_pressionadas[pygame.K_KP_ENTER]:
+              status_jogo = "JOGANDO"
      
-    #Exibindo a imagem da vaca
-    tela.blit(rua, (pos_x_rua, pos_y_rua))
-    tela.blit(perry, (pos_x_perry,pos_y_perry))
-    tela.blit(carro1, (pos_X_c1, pos_y_c1))
-    #Atualizando a tela
-    pygame.display.update()
+     if status_jogo == "JOGANDO":
+          #exibindo o fundo
+          tela.blit(fundo,(0,0))
 
-    #Controlando o FPS
-    clock.tick(60)
+          perry.exibir(tela)
+          perry.andar(teclas_pressionadas)
+
+               #fazendo inimigo andar
+          for inimigo in lista_inimigos:
+                    inimigo.andar()
+                    inimigo.exibir(tela)
+                    if perry.mascara.overlap(inimigo.mascara,(inimigo.pos_x_inimigo - perry.pos_x_perry, inimigo.pos_y_inimigo - perry.pos_y_perry )):
+                         inimigo.voltar()
+                         perry.som()
+                         perry.voltar()
+                    
+
+     #Atualizando a tela
+     pygame.display.update()
+
+     #Controlar o FPS (frames por segundo)
+     clock.tick(60)

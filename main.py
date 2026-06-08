@@ -34,6 +34,10 @@ inicio = pygame.image.load("src/img/tela_ini.png")
 
 inicio = pygame.transform.scale(inicio, (1200, 900))
 
+final = pygame.image.load("src/img/gameover.png")
+
+final = pygame.transform.scale(final, (1200, 900))
+
 
 #Criando um inimigo, ou melhor, instanciando uma classe, melhor ainda, eu estou criando meu objeto
 lista_inimigos = [Inimigo("src/img/carro1.png"),
@@ -44,6 +48,7 @@ lista_inimigos = [Inimigo("src/img/carro1.png"),
 #Instanciar um jogador, rriar objeto perry
 perry = Jogador()
 
+contador_mortes = 0
 #status jogo
 status_jogo = "INICIO"
 
@@ -77,9 +82,17 @@ while True:
                     inimigo.exibir(tela)
                     if perry.mascara.overlap(inimigo.mascara,(inimigo.pos_x_inimigo - perry.pos_x_perry, inimigo.pos_y_inimigo - perry.pos_y_perry )):
                          inimigo.voltar()
-                         perry.som()
+                         perry.som.play()
                          perry.voltar()
-                    
+                         contador_mortes += 1
+                         if contador_mortes == 3:
+                              status_jogo = "Final"
+                              contador_mortes = 0
+
+     if status_jogo == "Final":
+          tela.blit(final, (0, 0))
+          if teclas_pressionadas[pygame.K_RETURN] or teclas_pressionadas[pygame.K_KP_ENTER]:
+              status_jogo = "JOGANDO"
 
      #Atualizando a tela
      pygame.display.update()

@@ -15,7 +15,7 @@ class Jogador :
          #criando a mascara para ser utilizado na verificação da colissão
         self.mascara = pygame.mask.from_surface(self.imagem)
         
-        self.som = pygame.mixer.Sound("src/sound/dragon-studio-car-honk-386166.mp3")
+        self.som_colisao = pygame.mixer.Sound("src/sound/dragon-studio-car-honk-386166.mp3")
 
 
     def andar(self, teclas_pressisonadas):
@@ -51,7 +51,6 @@ class Jogador :
         self.pos_x_perry=500
         self.pos_y_perry= 630
 
-       
-
+    
     def som(self):
-        self.som.play()
+        self.som_colisao.play()

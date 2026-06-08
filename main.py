@@ -21,7 +21,6 @@ tela  = pygame.display.set_mode((1200,900))
 pygame.display.set_caption("Perry 3000")
 tela.fill(cores["VERDE"])
 
-#Carregando imagens
 
 # Carregando imagens
 fundo = pygame.image.load("src/img/rua.jpg")
@@ -38,6 +37,13 @@ final = pygame.image.load("src/img/gameover.png")
 
 final = pygame.transform.scale(final, (1200, 900))
 
+vitoria = pygame.image.load("src/img/win.png")
+
+vitoria = pygame.transform.scale(vitoria, (1200, 900))
+
+#Carregar a fonte de texto
+fonte = pygame.font.SysFont("Elephant", 26, False, False, )
+
 
 #Criando um inimigo, ou melhor, instanciando uma classe, melhor ainda, eu estou criando meu objeto
 lista_inimigos = [Inimigo("src/img/carro1.png"),
@@ -45,10 +51,11 @@ lista_inimigos = [Inimigo("src/img/carro1.png"),
                   Inimigo("src/img/carro3.png"),
                   Inimigo("src/img/carro4.png")]
 
-#Instanciar um jogador, rriar objeto perry
+#Instanciar um jogador, Criar objeto perry
 perry = Jogador()
 
 contador_mortes = 0
+pontos = 0
 #status jogo
 status_jogo = "INICIO"
 
@@ -73,6 +80,12 @@ while True:
           #exibindo o fundo
           tela.blit(fundo,(0,0))
 
+          #Renderizando e inserindo o texto
+          texto_pontuacao = fonte.render(f"Pontos: {pontos}", True, (0, 0, 0), None)
+          tela.blit(texto_pontuacao, (0,0))
+
+          #Inserindo o perry
+
           perry.exibir(tela)
           perry.andar(teclas_pressionadas)
 
@@ -93,6 +106,21 @@ while True:
           tela.blit(final, (0, 0))
           if teclas_pressionadas[pygame.K_RETURN] or teclas_pressionadas[pygame.K_KP_ENTER]:
               status_jogo = "JOGANDO"
+     
+     if status_jogo == "Final":
+          pontos = 0
+
+     if perry.pos_y_perry == 120:
+          perry.voltar()
+          pontos += 1 
+          print(pontos)
+
+     if pontos == 5:
+          tela.blit(vitoria, (0, 0))
+          if teclas_pressionadas[pygame.K_RETURN] or teclas_pressionadas[pygame.K_KP_ENTER]:
+              status_jogo = "JOGANDO"
+              pontos = 0
+
 
      #Atualizando a tela
      pygame.display.update()

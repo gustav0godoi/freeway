@@ -3,6 +3,7 @@ import pygame
 
 from classe_inimigo import Inimigo
 from classe_jogador import Jogador
+from caminho_relativo import resource_path as rp
 
 #Dicionário de cores
 cores = {"VERMELHO" : (255,0,0),
@@ -23,21 +24,21 @@ tela.fill(cores["VERDE"])
 
 
 # Carregando imagens
-fundo = pygame.image.load("src/img/rua.jpg")
+fundo = pygame.image.load(rp("src/img/rua.jpg"))
 
 fundo = pygame.transform.rotate(fundo, 270)
 
 fundo = pygame.transform.scale(fundo, (1200, 900))
 
-inicio = pygame.image.load("src/img/tela_ini.png")
+inicio = pygame.image.load(rp("src/img/tela_ini.png"))
 
 inicio = pygame.transform.scale(inicio, (1200, 900))
 
-final = pygame.image.load("src/img/gameover.png")
+final = pygame.image.load(rp("src/img/gameover.png"))
 
 final = pygame.transform.scale(final, (1200, 900))
 
-vitoria = pygame.image.load("src/img/win.png")
+vitoria = pygame.image.load(rp("src/img/win.png"))
 
 vitoria = pygame.transform.scale(vitoria, (1200, 900))
 
@@ -46,10 +47,10 @@ fonte = pygame.font.SysFont("Elephant", 26, False, False, )
 
 
 #Criando um inimigo, ou melhor, instanciando uma classe, melhor ainda, eu estou criando meu objeto
-lista_inimigos = [Inimigo("src/img/carro1.png"),
-                  Inimigo("src/img/carro2.png"),
-                  Inimigo("src/img/carro3.png"),
-                  Inimigo("src/img/carro4.png")]
+lista_inimigos = [Inimigo(rp("src/img/carro1.png")),
+                  Inimigo(rp("src/img/carro2.png")),
+                  Inimigo(rp("src/img/carro3.png")),
+                  Inimigo(rp("src/img/carro4.png"))]
 
 #Instanciar um jogador, Criar objeto perry
 perry = Jogador()
@@ -60,11 +61,12 @@ pontos = 0
 status_jogo = "INICIO"
 
 #Vou criar um loping infinito para manter a janela aberta
-while True:
+rodando = True
+while rodando:
      lista_eventos = pygame.event.get() #Pego todos os eventos que acontecem na janela
      for evento in lista_eventos: #Percorro os eventos 
         if evento.type == pygame.QUIT: #Verifico se um dos eventos é para sair
-            pygame.quit() #Encerro o jogo
+            rodando = False
 
     
 
@@ -95,7 +97,7 @@ while True:
                     inimigo.exibir(tela)
                     if perry.mascara.overlap(inimigo.mascara,(inimigo.pos_x_inimigo - perry.pos_x_perry, inimigo.pos_y_inimigo - perry.pos_y_perry )):
                          inimigo.voltar()
-                         perry.som.play()
+                         perry.som()
                          perry.voltar()
                          contador_mortes += 1
                          if contador_mortes == 3:

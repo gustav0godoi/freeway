@@ -1,10 +1,11 @@
 import pygame
 import random
 
+from caminho_relativo import resource_path as rp
 
 class Jogador :
     def __init__(self):
-        self.imagem = perry = pygame.image.load("src/img/perry.png")
+        self.imagem = perry = pygame.image.load(rp("src/img/perry.png"))
         self.imagem = perry = pygame.transform.scale_by(self.imagem, 0.5)
         
         #Posição da imagem
@@ -15,7 +16,7 @@ class Jogador :
          #criando a mascara para ser utilizado na verificação da colissão
         self.mascara = pygame.mask.from_surface(self.imagem)
         
-        self.som_colisao = pygame.mixer.Sound("src/sound/dragon-studio-car-honk-386166.mp3")
+        self.som_colisao = pygame.mixer.Sound(rp("src/sound/dragon-studio-car-honk-386166.mp3"))
 
 
     def andar(self, teclas_pressisonadas):
